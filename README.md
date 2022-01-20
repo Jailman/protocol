@@ -1,2 +1,2 @@
 # protocol
-A protocol package for network communication.  
+A simple protocol package for network communication using json.  
