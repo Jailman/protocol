@@ -19,7 +19,7 @@ func handleConnection_SendStatus(conn net.Conn, mission string, status string) {
 	conn.Write(protocol.Enpack([]byte(sendstatus)))
 
 	Log("Status sent.")
-	// defer conn.Close()
+	defer conn.Close()
 
 }
 
@@ -46,7 +46,7 @@ func handleConnection_getMission(conn net.Conn) {
 
 		tmpBuffer = protocol.Depack(append(tmpBuffer, buffer[:n]...), readerChannel)
 	}
-
+	defer conn.Close()
 }
 
 func Log(v ...interface{}) {
