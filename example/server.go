@@ -13,10 +13,12 @@ import (
 // Socket通信函数
 // 发送消息
 func handleConnection_SendMission(conn net.Conn, mission string) {
+
 	conn.Write(protocol.Enpack([]byte(mission)))
 	Log(mission)
 	Log("Mission sent.")
-	defer conn.Close()
+	// defer conn.Close()
+	
 }
 
 func handleConnection_getStatus(conn net.Conn) {
@@ -42,7 +44,7 @@ func handleConnection_getStatus(conn net.Conn) {
 
 		tmpBuffer = protocol.Depack(append(tmpBuffer, buffer[:n]...), readerChannel)
 	}
-	defer conn.Close()
+	// defer conn.Close()
 
 }
 

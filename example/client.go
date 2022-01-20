@@ -19,7 +19,7 @@ func handleConnection_SendStatus(conn net.Conn, mission string, status string) {
 	conn.Write(protocol.Enpack([]byte(sendstatus)))
 
 	Log("Status sent.")
-	defer conn.Close()
+	// defer conn.Close()
 
 }
 
@@ -46,7 +46,7 @@ func handleConnection_getMission(conn net.Conn) {
 
 		tmpBuffer = protocol.Depack(append(tmpBuffer, buffer[:n]...), readerChannel)
 	}
-	defer conn.Close()
+	// defer conn.Close()
 }
 
 func Log(v ...interface{}) {
@@ -66,7 +66,7 @@ func reader(readerChannel chan []byte, conn net.Conn) {
 				if dat["Mission"].(string) == "heartbeat" {
 					Log("Heartbeat status: ", dat["Status"])
 					// 心跳设定为每秒50次
-					time.Sleep(20*time.Millisecond)
+					time.Sleep(500*time.Millisecond)
 					mission := "heartbeat"
 					status := "check"
 					handleConnection_SendStatus(conn, mission, status)
