@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"io"
+	"os/signal"
 	"github.com/Jailman/protocol"
 )
 
@@ -18,7 +19,7 @@ func handleConnection_SendMission(conn net.Conn, mission string) {
 	Log(mission)
 	Log("Mission sent.")
 	// defer conn.Close()
-	
+
 }
 
 func handleConnection_getStatus(conn net.Conn) {
@@ -85,8 +86,25 @@ func CheckError(err error) {
 	}
 }
 
+// 手动中断
+func listenSigInt() chan os.Signal {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	return c
+}
+
 // main函数
 func main() {
+
+	// 手动终止
+	go func() {
+		quitChan := listenSigInt()
+		select {
+		case <-quitChan:
+			log.Printf("got control-C")
+			os.Exit(0)
+		}
+	}()
 
 	// 建立socket，监听端口
 	listen := ":8888"
@@ -95,7 +113,6 @@ func main() {
 	defer netListen.Close()
 
 	Log("Waiting for clients")
-
 	
 	// 向client发送命令
 	for {

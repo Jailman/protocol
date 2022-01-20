@@ -8,6 +8,7 @@ import (
 	"os"
 	"io"
 	"time"
+	"os/signal"
 	"github.com/Jailman/protocol"
 )
 
@@ -78,8 +79,25 @@ func reader(readerChannel chan []byte, conn net.Conn) {
 	}
 }
 
+// 手动中断
+func listenSigInt() chan os.Signal {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	return c
+}
+
 // main函数
 func main() {
+
+	// 手动终止
+	go func() {
+		quitChan := listenSigInt()
+		select {
+		case <-quitChan:
+			log.Printf("got control-C")
+			os.Exit(0)
+		}
+	}()
 
 	server := "127.0.0.1:8888"
 	for {
@@ -103,5 +121,5 @@ func main() {
 		handleConnection_SendStatus(conn, mission, status)
 		handleConnection_getMission(conn)
 	}
-
+	
 }
