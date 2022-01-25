@@ -66,7 +66,7 @@ func reader(readerChannel chan []byte, conn net.Conn) {
 				// 建立对话
 				if dat["Mission"].(string) == "heartbeat" {
 					Log("Heartbeat status: ", dat["Status"])
-					// 心跳设定为每秒50次
+					// 心跳设定为每秒20次
 					time.Sleep(500*time.Millisecond)
 					mission := "heartbeat"
 					status := "check"
